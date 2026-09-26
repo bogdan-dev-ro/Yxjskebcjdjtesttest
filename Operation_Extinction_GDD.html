@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operation: Extinction — GDD & Specificație Tehnică</title>
+<style>
+:root{--bg:#0a0e17;--panel:#111a2b;--panel2:#18243a;--text:#e7edf5;--muted:#a7b3c4;--orange:#ff7043;--cyan:#43d9ff;--green:#70f0a8;--red:#ff7777}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:1180px;margin:auto;padding:32px 20px 80px}header{text-align:center;padding:70px 20px 50px;border-bottom:2px solid var(--orange)}h1{font-size:clamp(2.2rem,6vw,4.8rem);line-height:1.05;color:var(--orange);margin:0 0 12px}h2{color:var(--orange);font-size:2rem;border-bottom:1px solid #34445c;padding-bottom:10px;margin-top:0}h3{color:var(--cyan);margin-top:34px}h4{color:var(--green)}p,li{color:var(--text)}.muted{color:var(--muted)}.toc,.chapter,.callout{background:var(--panel);border:1px solid #263957;border-radius:12px;padding:26px;margin:26px 0}.toc a{color:var(--cyan);text-decoration:none}.toc ol{columns:2}.formula,pre{background:#070b12;border:1px solid #31425d;border-left:4px solid var(--cyan);border-radius:8px;padding:18px;overflow:auto;font:14px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--green);white-space:pre-wrap}.callout{border-left:4px solid var(--orange)}table{width:100%;border-collapse:collapse;margin:20px 0;background:var(--panel2)}th,td{padding:10px 12px;border:1px solid #34445c;text-align:left}th{color:#071018;background:var(--cyan)}code{color:var(--green)}footer{text-align:center;color:var(--muted);border-top:1px solid #34445c;padding-top:30px;margin-top:50px}@media(max-width:700px){.toc ol{columns:1}main{padding:15px 10px}.chapter,.toc{padding:18px}table{font-size:13px}}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Operation: Extinction</h1><p style="font-size:1.45rem;color:var(--cyan)">FPS 3D Survival Hardcore</p><p class="muted">Game Design Document & Specificație Tehnică de Producție</p></header>
+<section class="toc"><h2>Cuprins</h2><ol>
+<li><a href="#c1">Viziune și gameplay loop</a></li><li><a href="#c2">Mișcare 3D și parkour</a></li><li><a href="#c3">Balistică, recoil și hitbox-uri</a></li><li><a href="#c4">AI avansat</a></li><li><a href="#c5">Survival, economie și bază</a></li><li><a href="#c6">Implementare tehnică</a></li><li><a href="#c7">Arhitectură de producție</a></li><li><a href="#c8">Inventar și full-loot</a></li><li><a href="#c9">Construcție, electricitate și raiduri</a></li><li><a href="#c10">Testare și criterii de acceptanță</a></li>
+</ol></section>
+<section class="chapter" id="c1"><h2>Capitolul 1 — Viziune, gameplay loop și arhitectură</h2><h3>1.1 Filosofie</h3><p>Operation: Extinction mută survival-ul dintr-o experiență izometrică bazată pe grinding într-un FPS 3D cu aiming, recoil control, poziționare spațială, parkour, balistică și decizii de risc.</p><table><tr><th>Sistem</th><th>Implementare</th></tr><tr><td>Combat</td><td>Real-time, recoil procedural, hitbox-uri segmentate</td></tr><tr><td>Risc</td><td>Full-loot la moarte, obiecte persistente și degradare fizică</td></tr><tr><td>Mișcare</td><td>Sprint, slide, vault, mantling, wall-run și double jump</td></tr><tr><td>AI</td><td>Percepție vizuală/acustică, cover, supresie și flancare</td></tr></table><h3>1.2 Core loop</h3><p>Pregătire bază → alegere loadout → deployment → explorare și loot → combat → gestionarea resurselor → extracție → crafting și upgrade → apărarea bazei.</p><div class="callout"><b>Moartea este permanentă pentru raid:</b> inventarul purtat este transferat într-un loot container persistent, iar jucătorul revine la ultimul punct sigur.</div></section>
+<section class="chapter" id="c2"><h2>Capitolul 2 — Matematica mișcării 3D și parkour</h2><h3>2.1 Locomoție</h3><div class="formula">v(t+Δt)=v(t)+a(t)Δt
+x(t+Δt)=x(t)+v(t+Δt)Δt
+v_h,new=MoveTowards(v_h, d̂·v_max, a_max·Δt)
+v_h,new=v_h·max(0,1-k_f·Δt)  // frecare la sol
+v_h,new=v_h·e^(-k_a·Δt)+a_air·Δt  // aer</div><table><tr><th>Stare</th><th>Viteză</th><th>Accelerație</th></tr><tr><td>Mers</td><td>2,8 m/s</td><td>18 m/s²</td></tr><tr><td>Sprint</td><td>5,8 m/s</td><td>24 m/s²</td></tr><tr><td>Crouch</td><td>1,65 m/s</td><td>12 m/s²</td></tr><tr><td>Slide</td><td>7,2 m/s inițial</td><td>decelerare 2,6</td></tr></table><h3>2.2 Stamina</h3><div class="formula">S(t+Δt)=clamp(S(t)+(R(t)-C(t))Δt,0,S_max)
+R_repaus=18/s; R_mers=8/s; C_sprint=14/s; C_slide=22/s; C_wall=19/s</div><h3>2.3 Slide, wall-run și cădere</h3><div class="formula">v_slide(t)=v_0·e^(-k_s·t)+g·sin(θ)·t
+v_wall(t)=v_w0·e^(-k_w·t)·(0,75+0,25·S/S_max)
+D_f=0 dacă |v_y|≤6; altfel D_f=(|v_y|-6)²·4,2
+E_impact=1/2·m·|v_impact|²</div><p>Raycast-urile pentru mantling verifică obstacol frontal, suprafața superioară și volumul capsulei la destinație. Wall-run-ul cere o normală aproape perpendiculară pe verticală și consumă stamina continuu.</p></section>
+<section class="chapter" id="c3"><h2>Capitolul 3 — Balistică, recoil și hitbox-uri</h2><h3>3.1 Proiectile</h3><div class="formula">dp/dt=v
+dv/dt=g+a_drag+a_wind
+F_drag=−1/2·ρ·C_d·A·|v_rel|·v_rel
+E=1/2·m·v²
+E_out=max(0,E_in−k_material·thickness·f_calibre)
+v_out=√(2·E_out/m)
+Δy≈g·d²/(2·v_x²)</div><h3>3.2 Recoil și sway</h3><div class="formula">J_r=m_b·v_b+κ·m_g·v_g
+θ̈+2ζω₀θ̇+ω₀²θ=F(t)
+θ_breath=A_base·sin(2πf_b·t+φ)
+σ_spread=σ_base+σ_movement+σ_stamina+σ_heat+σ_damage</div><h3>3.3 Damage</h3><table><tr><th>Hitbox</th><th>Multiplicator</th><th>Efect</th></tr><tr><td>Creier</td><td>5,0×</td><td>damage critic</td></tr><tr><td>Față/gât</td><td>4,0–4,5×</td><td>sângerare</td></tr><tr><td>Torace</td><td>1,0×</td><td>damage principal</td></tr><tr><td>Membre</td><td>0,30–0,70×</td><td>stabilitate și viteză reduse</td></tr></table><h3>3.4 Durabilitate și jam</h3><div class="formula">Q_next=max(0,Q−d_shot·M_heat·M_ammo)
+P_jam=P_base·[1+4(1−Q)²+1,5·H/H_max+0,35·N_rapid]</div></section>
+<section class="chapter" id="c4"><h2>Capitolul 4 — Inteligență artificială avansată</h2><h3>4.1 Percepție</h3><div class="formula">I(d)=I₀−20·log₁₀(d/d₀)−A_material
+P_detect=P₀·M_distance·M_light·M_movement·M_camouflage</div><p>Senzorul vizual folosește FOV, distanță, lumină și raycast-uri către cap, torace și pelvis. Senzorul audio primește evenimente cu poziție aproximată și eroare proporțională cu distanța.</p><h3>4.2 State machine</h3><p>Patrol → Suspicious → Investigating → Combat. Combat poate trece în Suppressing, Flanking, Reloading sau Retreating. Viața sub 25% declanșează retragerea tactică.</p><h3>4.3 Flancare</h3><div class="formula">p_i=p_target+r·[cos(θ_i),0,sin(θ_i)]
+S_i=w_cC_i+w_lL_i+w_dD_i+w_aA_i−w_rR_i−w_tT_i</div><p>Fiecare candidat este verificat pe NavMesh pentru cale completă, distanță, cover, LOS, expunere și separarea față de aliați.</p><h3>4.4 Arhetipuri</h3><ul><li><b>Stalker:</b> rapid, zigzag, atacă din unghi mort.</li><li><b>Tank:</b> armură direcțională, charge, vulnerabilități la îmbinări.</li><li><b>Ranged Human:</b> cover, reload tactic, grenade cu predicție parabolică.</li></ul></section>
+<section class="chapter" id="c5"><h2>Capitolul 5 — Survival, economie și construcție</h2><h3>5.1 Fiziologie</h3><div class="formula">H_next=clamp(H+R_heal·Δt−D·Δt,0,H_max)
+F_next=F−r_F·Δt
+W_next=W−(r_W+0,08·C_sprint+0,04·T_ambient)·Δt
+R_next=R+(r_zone−r_detox)·Δt</div><p>Foamea, setea, radiația, infectarea și temperatura modifică stamina, sway-ul, vindecarea, zgomotul și sănătatea recuperabilă.</p><h3>5.2 Inventar și crafting</h3><p>Grilă standard: 12×8. Pușca de asalt ocupă 2×5, armura 3×3, pistolul 2×2. Greutatea totală modifică viteza și zgomotul pașilor.</p><h3>5.3 Bază</h3><div class="formula">x_snap=round(x/g)·g
+L_i=L_self+Σα_ij·L_j
+C_i=C_material·M_foundation·M_damage
+Q_i=clamp(1−L_i/C_i,0,1)</div><p>Materialele sunt lemn, piatră, beton și oțel. Electricitatea alimentează uși, camere, iluminare, turete și stații de producție.</p></section>
+<section class="chapter" id="c6"><h2>Capitolul 6 — Implementare tehnică</h2><p>Codul sursă Unity este organizat în module independente pentru Player, Weapons, AI, Inventory, Base și Core. Controller-ul folosește CharacterController, proiectilele folosesc SphereCast swept, iar AI-ul folosește NavMeshAgent.</p><h3>6.1 Structură recomandată</h3><pre>Assets/Code/
+├── Core/GameBootstrap.cs
+├── Player/FpsMotor.cs
+├── Player/PlayerVitals.cs
+├── Weapons/BallisticWeapon.cs
+├── Weapons/BallisticProjectileSimulator.cs
+├── Weapons/RecoilSpring.cs
+├── Weapons/SegmentedDamageReceiver.cs
+├── AI/AiPerception.cs
+├── AI/AiBrain.cs
+├── AI/AiFlanking.cs
+├── Inventory/GridInventory.cs
+└── Base/RaidDirector.cs</pre><h3>6.2 Controller și recoil</h3><pre>// Integrare semi-implicită
+velocity += acceleration * deltaTime;
+characterController.Move(velocity * deltaTime);
+
+// Spring-damper
+var acceleration = -stiffness * recoilAngle
+                 - damping * recoilAngularVelocity;
+recoilAngularVelocity += acceleration * deltaTime;
+recoilAngle += recoilAngularVelocity * deltaTime;</pre><h3>6.3 Proiectil</h3><pre>Vector3 relativeVelocity = velocity - wind;
+Vector3 drag = -0.5f * airDensity * dragCoefficient
+             * area * relativeVelocity.magnitude
+             * relativeVelocity;
+velocity += (Physics.gravity + drag / mass) * deltaTime;
+SphereCast(previousPosition, radius, displacement.normalized,
+           out hit, displacement.magnitude, collisionMask);</pre><h3>6.4 AI</h3><pre>if (health01 &lt;= 0f) ChangeState(AiState.Dead);
+else if (health01 &lt;= 0.25f) ChangeState(AiState.Retreating);
+else if (perception.HasVisualContact())
+    ChangeState(ShouldFlank()
+        ? AiState.Flanking
+        : AiState.Combat);</pre></section>
+<section class="chapter" id="c7"><h2>Capitolul 7 — Arhitectura de producție</h2><p>Straturi: Presentation, Gameplay, Simulation și Authority. Clientul poate prezice camera, animațiile și mișcarea locală; serverul autoritativ validează poziția, damage-ul, proiectilele, inventarul, loot-ul și extracția.</p><table><tr><th>Simulare</th><th>Frecvență</th></tr><tr><td>Server</td><td>20 Hz</td></tr><tr><td>Fizică</td><td>50 Hz</td></tr><tr><td>Proiectile</td><td>60–120 Hz</td></tr><tr><td>Autosave</td><td>10 s; imediat la evenimente critice</td></tr></table></section>
+<section class="chapter" id="c8"><h2>Capitolul 8 — Inventar și full-loot</h2><h3>8.1 Placement</h3><div class="formula">0≤x; 0≤y; x+w≤W; y+h≤H
+M_total=Σq_i·m_i
+V_total=Σw_i·h_i·q_i</div><h3>8.2 Tranzacția atomică de moarte</h3><ol><li>Serverul confirmă moartea.</li><li>Blochează inventarul.</li><li>Generează DeathTransactionId.</li><li>Salvează loot container-ul.</li><li>Golește inventarul.</li><li>Respawnează jucătorul.</li></ol><div class="callout">Claim-ul loot-ului folosește lock tranzacțional; dacă toate obiectele nu încap, transferul este anulat.</div></section>
+<section class="chapter" id="c9"><h2>Capitolul 9 — Electricitate și raiduri</h2><div class="formula">P_net=P_generated−P_consumed
+E_next=clamp(E+P_net·Δt,0,E_max)
+T_raid=0,25L_base+0,20V_loot+0,20D_player+0,15E_noise+0,20R_history
+P_raid=1−e^(−k·T_raid·Δt)</div><p>Raidul trece prin Reconnaissance, Approach, Breach, Loot și Retreat. Punctul de breșă este ales după integritatea structurală, timpul de distrugere, turete și capcane.</p></section>
+<section class="chapter" id="c10"><h2>Capitolul 10 — Testare și criterii de acceptanță</h2><h3>10.1 Testare</h3><ul><li>64 jucători, 48 AI, 512 proiectile și 500 piese de bază în testul de stres.</li><li>Server tick mediu sub 50 ms.</li><li>Zero duplicări de obiecte în testele de tranzacție.</li><li>Zero tunneling pentru proiectilele validate.</li><li>AI stuck rate sub 1%.</li></ul><h3>10.2 Vertical slice</h3><p>Vertical slice-ul trebuie să permită deployment, loot, combat, damage segmentat, AI vizual și audio, extracție, full-loot, crafting, construcție și apărarea bazei.</p><div class="callout"><b>Ordine recomandată:</b> locomotie → damage → arme → inventar → loot → AI → extracție → bază → electricitate → raiduri → multiplayer autoritativ → optimizare.</div></section>
+<footer>Operation: Extinction — GDD & Specificație Tehnică de Producție<br>Document HTML pregătit pentru descărcare.</footer>
+</main>
+</body>
+</html>
