@@ -2,91 +2,65 @@
 <html lang="ro">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Operation: Extinction — GDD & Specificație Tehnică</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Operation: Extinction — FPS Survival</title>
 <style>
-:root{--bg:#0a0e17;--panel:#111a2b;--panel2:#18243a;--text:#e7edf5;--muted:#a7b3c4;--orange:#ff7043;--cyan:#43d9ff;--green:#70f0a8;--red:#ff7777}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:1180px;margin:auto;padding:32px 20px 80px}header{text-align:center;padding:70px 20px 50px;border-bottom:2px solid var(--orange)}h1{font-size:clamp(2.2rem,6vw,4.8rem);line-height:1.05;color:var(--orange);margin:0 0 12px}h2{color:var(--orange);font-size:2rem;border-bottom:1px solid #34445c;padding-bottom:10px;margin-top:0}h3{color:var(--cyan);margin-top:34px}h4{color:var(--green)}p,li{color:var(--text)}.muted{color:var(--muted)}.toc,.chapter,.callout{background:var(--panel);border:1px solid #263957;border-radius:12px;padding:26px;margin:26px 0}.toc a{color:var(--cyan);text-decoration:none}.toc ol{columns:2}.formula,pre{background:#070b12;border:1px solid #31425d;border-left:4px solid var(--cyan);border-radius:8px;padding:18px;overflow:auto;font:14px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--green);white-space:pre-wrap}.callout{border-left:4px solid var(--orange)}table{width:100%;border-collapse:collapse;margin:20px 0;background:var(--panel2)}th,td{padding:10px 12px;border:1px solid #34445c;text-align:left}th{color:#071018;background:var(--cyan)}code{color:var(--green)}footer{text-align:center;color:var(--muted);border-top:1px solid #34445c;padding-top:30px;margin-top:50px}@media(max-width:700px){.toc ol{columns:1}main{padding:15px 10px}.chapter,.toc{padding:18px}table{font-size:13px}}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05070b;color:#eaf2f8;font-family:system-ui,Segoe UI,sans-serif}#game{display:block;width:100%;height:100%;cursor:crosshair}#hud{position:fixed;inset:0;pointer-events:none;text-shadow:0 2px 3px #000}.top{position:absolute;top:16px;left:18px;right:18px;display:flex;justify-content:space-between;gap:18px;font-weight:700;font-size:14px}.panel{background:rgba(5,10,16,.78);border:1px solid rgba(110,220,255,.4);border-radius:8px;padding:10px 12px;backdrop-filter:blur(4px)}#stats{min-width:230px}#objective{max-width:430px;color:#d8f7ff}#crosshair{position:absolute;left:50%;top:50%;width:24px;height:24px;transform:translate(-50%,-50%)}#crosshair:before,#crosshair:after{content:"";position:absolute;background:#fff;box-shadow:0 0 6px #7df}#crosshair:before{left:11px;top:2px;width:2px;height:20px}#crosshair:after{left:2px;top:11px;width:20px;height:2px}.bar{height:8px;background:#222b35;border-radius:8px;overflow:hidden;margin-top:4px}.fill{height:100%;transition:width .15s}.health{background:#ef5964}.stamina{background:#e5c34d}.water{background:#37c8ff}.food{background:#9be35b}.rad{background:#b070e8}#message{position:absolute;bottom:16%;left:50%;transform:translateX(-50%);font-size:20px;color:#fff;text-align:center;opacity:0;transition:opacity .2s}.bottom{position:absolute;bottom:16px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:end}.weapon{font-size:18px}.ammo{font-size:28px;color:#ffca72}.hint{color:#b9c6d4;font-size:13px}.screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,rgba(23,46,61,.72),rgba(2,5,9,.96));z-index:3}.card{width:min(680px,calc(100% - 32px));padding:32px;background:rgba(8,15,24,.96);border:1px solid #50d8ff;border-radius:14px;box-shadow:0 0 50px #000}.card h1{margin:0;color:#ff7650;font-size:clamp(28px,6vw,58px);line-height:1}.card h2{color:#56ddff;font-weight:500;margin:8px 0 20px}.card p{color:#c7d4df;line-height:1.6}.card button{background:#ff7048;border:0;border-radius:7px;color:#111;padding:13px 20px;font-weight:800;font-size:16px;cursor:pointer}.card button:hover{background:#ff9a72}.hidden{display:none!important}.death h1{color:#ef5964}.extract{color:#7dffaf}.damage{animation:hit .18s ease}@keyframes hit{50%{background:rgba(255,0,0,.32)}}#help{position:absolute;left:50%;bottom:58px;transform:translateX(-50%);font-size:12px;color:#bdd0dc;white-space:nowrap}
 </style>
 </head>
 <body>
-<main>
-<header><h1>Operation: Extinction</h1><p style="font-size:1.45rem;color:var(--cyan)">FPS 3D Survival Hardcore</p><p class="muted">Game Design Document & Specificație Tehnică de Producție</p></header>
-<section class="toc"><h2>Cuprins</h2><ol>
-<li><a href="#c1">Viziune și gameplay loop</a></li><li><a href="#c2">Mișcare 3D și parkour</a></li><li><a href="#c3">Balistică, recoil și hitbox-uri</a></li><li><a href="#c4">AI avansat</a></li><li><a href="#c5">Survival, economie și bază</a></li><li><a href="#c6">Implementare tehnică</a></li><li><a href="#c7">Arhitectură de producție</a></li><li><a href="#c8">Inventar și full-loot</a></li><li><a href="#c9">Construcție, electricitate și raiduri</a></li><li><a href="#c10">Testare și criterii de acceptanță</a></li>
-</ol></section>
-<section class="chapter" id="c1"><h2>Capitolul 1 — Viziune, gameplay loop și arhitectură</h2><h3>1.1 Filosofie</h3><p>Operation: Extinction mută survival-ul dintr-o experiență izometrică bazată pe grinding într-un FPS 3D cu aiming, recoil control, poziționare spațială, parkour, balistică și decizii de risc.</p><table><tr><th>Sistem</th><th>Implementare</th></tr><tr><td>Combat</td><td>Real-time, recoil procedural, hitbox-uri segmentate</td></tr><tr><td>Risc</td><td>Full-loot la moarte, obiecte persistente și degradare fizică</td></tr><tr><td>Mișcare</td><td>Sprint, slide, vault, mantling, wall-run și double jump</td></tr><tr><td>AI</td><td>Percepție vizuală/acustică, cover, supresie și flancare</td></tr></table><h3>1.2 Core loop</h3><p>Pregătire bază → alegere loadout → deployment → explorare și loot → combat → gestionarea resurselor → extracție → crafting și upgrade → apărarea bazei.</p><div class="callout"><b>Moartea este permanentă pentru raid:</b> inventarul purtat este transferat într-un loot container persistent, iar jucătorul revine la ultimul punct sigur.</div></section>
-<section class="chapter" id="c2"><h2>Capitolul 2 — Matematica mișcării 3D și parkour</h2><h3>2.1 Locomoție</h3><div class="formula">v(t+Δt)=v(t)+a(t)Δt
-x(t+Δt)=x(t)+v(t+Δt)Δt
-v_h,new=MoveTowards(v_h, d̂·v_max, a_max·Δt)
-v_h,new=v_h·max(0,1-k_f·Δt)  // frecare la sol
-v_h,new=v_h·e^(-k_a·Δt)+a_air·Δt  // aer</div><table><tr><th>Stare</th><th>Viteză</th><th>Accelerație</th></tr><tr><td>Mers</td><td>2,8 m/s</td><td>18 m/s²</td></tr><tr><td>Sprint</td><td>5,8 m/s</td><td>24 m/s²</td></tr><tr><td>Crouch</td><td>1,65 m/s</td><td>12 m/s²</td></tr><tr><td>Slide</td><td>7,2 m/s inițial</td><td>decelerare 2,6</td></tr></table><h3>2.2 Stamina</h3><div class="formula">S(t+Δt)=clamp(S(t)+(R(t)-C(t))Δt,0,S_max)
-R_repaus=18/s; R_mers=8/s; C_sprint=14/s; C_slide=22/s; C_wall=19/s</div><h3>2.3 Slide, wall-run și cădere</h3><div class="formula">v_slide(t)=v_0·e^(-k_s·t)+g·sin(θ)·t
-v_wall(t)=v_w0·e^(-k_w·t)·(0,75+0,25·S/S_max)
-D_f=0 dacă |v_y|≤6; altfel D_f=(|v_y|-6)²·4,2
-E_impact=1/2·m·|v_impact|²</div><p>Raycast-urile pentru mantling verifică obstacol frontal, suprafața superioară și volumul capsulei la destinație. Wall-run-ul cere o normală aproape perpendiculară pe verticală și consumă stamina continuu.</p></section>
-<section class="chapter" id="c3"><h2>Capitolul 3 — Balistică, recoil și hitbox-uri</h2><h3>3.1 Proiectile</h3><div class="formula">dp/dt=v
-dv/dt=g+a_drag+a_wind
-F_drag=−1/2·ρ·C_d·A·|v_rel|·v_rel
-E=1/2·m·v²
-E_out=max(0,E_in−k_material·thickness·f_calibre)
-v_out=√(2·E_out/m)
-Δy≈g·d²/(2·v_x²)</div><h3>3.2 Recoil și sway</h3><div class="formula">J_r=m_b·v_b+κ·m_g·v_g
-θ̈+2ζω₀θ̇+ω₀²θ=F(t)
-θ_breath=A_base·sin(2πf_b·t+φ)
-σ_spread=σ_base+σ_movement+σ_stamina+σ_heat+σ_damage</div><h3>3.3 Damage</h3><table><tr><th>Hitbox</th><th>Multiplicator</th><th>Efect</th></tr><tr><td>Creier</td><td>5,0×</td><td>damage critic</td></tr><tr><td>Față/gât</td><td>4,0–4,5×</td><td>sângerare</td></tr><tr><td>Torace</td><td>1,0×</td><td>damage principal</td></tr><tr><td>Membre</td><td>0,30–0,70×</td><td>stabilitate și viteză reduse</td></tr></table><h3>3.4 Durabilitate și jam</h3><div class="formula">Q_next=max(0,Q−d_shot·M_heat·M_ammo)
-P_jam=P_base·[1+4(1−Q)²+1,5·H/H_max+0,35·N_rapid]</div></section>
-<section class="chapter" id="c4"><h2>Capitolul 4 — Inteligență artificială avansată</h2><h3>4.1 Percepție</h3><div class="formula">I(d)=I₀−20·log₁₀(d/d₀)−A_material
-P_detect=P₀·M_distance·M_light·M_movement·M_camouflage</div><p>Senzorul vizual folosește FOV, distanță, lumină și raycast-uri către cap, torace și pelvis. Senzorul audio primește evenimente cu poziție aproximată și eroare proporțională cu distanța.</p><h3>4.2 State machine</h3><p>Patrol → Suspicious → Investigating → Combat. Combat poate trece în Suppressing, Flanking, Reloading sau Retreating. Viața sub 25% declanșează retragerea tactică.</p><h3>4.3 Flancare</h3><div class="formula">p_i=p_target+r·[cos(θ_i),0,sin(θ_i)]
-S_i=w_cC_i+w_lL_i+w_dD_i+w_aA_i−w_rR_i−w_tT_i</div><p>Fiecare candidat este verificat pe NavMesh pentru cale completă, distanță, cover, LOS, expunere și separarea față de aliați.</p><h3>4.4 Arhetipuri</h3><ul><li><b>Stalker:</b> rapid, zigzag, atacă din unghi mort.</li><li><b>Tank:</b> armură direcțională, charge, vulnerabilități la îmbinări.</li><li><b>Ranged Human:</b> cover, reload tactic, grenade cu predicție parabolică.</li></ul></section>
-<section class="chapter" id="c5"><h2>Capitolul 5 — Survival, economie și construcție</h2><h3>5.1 Fiziologie</h3><div class="formula">H_next=clamp(H+R_heal·Δt−D·Δt,0,H_max)
-F_next=F−r_F·Δt
-W_next=W−(r_W+0,08·C_sprint+0,04·T_ambient)·Δt
-R_next=R+(r_zone−r_detox)·Δt</div><p>Foamea, setea, radiația, infectarea și temperatura modifică stamina, sway-ul, vindecarea, zgomotul și sănătatea recuperabilă.</p><h3>5.2 Inventar și crafting</h3><p>Grilă standard: 12×8. Pușca de asalt ocupă 2×5, armura 3×3, pistolul 2×2. Greutatea totală modifică viteza și zgomotul pașilor.</p><h3>5.3 Bază</h3><div class="formula">x_snap=round(x/g)·g
-L_i=L_self+Σα_ij·L_j
-C_i=C_material·M_foundation·M_damage
-Q_i=clamp(1−L_i/C_i,0,1)</div><p>Materialele sunt lemn, piatră, beton și oțel. Electricitatea alimentează uși, camere, iluminare, turete și stații de producție.</p></section>
-<section class="chapter" id="c6"><h2>Capitolul 6 — Implementare tehnică</h2><p>Codul sursă Unity este organizat în module independente pentru Player, Weapons, AI, Inventory, Base și Core. Controller-ul folosește CharacterController, proiectilele folosesc SphereCast swept, iar AI-ul folosește NavMeshAgent.</p><h3>6.1 Structură recomandată</h3><pre>Assets/Code/
-├── Core/GameBootstrap.cs
-├── Player/FpsMotor.cs
-├── Player/PlayerVitals.cs
-├── Weapons/BallisticWeapon.cs
-├── Weapons/BallisticProjectileSimulator.cs
-├── Weapons/RecoilSpring.cs
-├── Weapons/SegmentedDamageReceiver.cs
-├── AI/AiPerception.cs
-├── AI/AiBrain.cs
-├── AI/AiFlanking.cs
-├── Inventory/GridInventory.cs
-└── Base/RaidDirector.cs</pre><h3>6.2 Controller și recoil</h3><pre>// Integrare semi-implicită
-velocity += acceleration * deltaTime;
-characterController.Move(velocity * deltaTime);
+<canvas id="game"></canvas>
+<div id="hud">
+  <div class="top"><div id="stats" class="panel"></div><div id="objective" class="panel"></div></div>
+  <div id="crosshair"></div><div id="message"></div>
+  <div class="bottom"><div class="panel weapon"><span id="weaponName">CARABINĂ M4</span><br><span class="hint">R reîncarcă · Click trage · E interacționează</span></div><div class="panel ammo"><span id="ammo">30</span><small>/120</small></div></div>
+  <div id="help">WASD mișcare · Shift sprint · Ctrl crouch · Space salt · Mouse privește · Esc eliberează cursorul</div>
+</div>
+<div id="start" class="screen"><div class="card"><h1>OPERATION:<br>EXTINCTION</h1><h2>FPS SURVIVAL HARDCORE</h2><p>Intri în sector, aduni resurse, elimini amenințările și ajungi la extracție. Dacă mori, pierzi tot loot-ul transportat.</p><p><b>Obiectiv:</b> găsește 3 componente și activează zona de extracție verde.</p><button id="startBtn">DEPLOY ÎN SECTOR</button></div></div>
+<div id="death" class="screen hidden"><div class="card death"><h1>AI FOST ELIMINAT</h1><h2>Full-loot activat</h2><p>Echipamentul și resursele din raid au fost abandonate în sector. Baza ta rămâne intactă.</p><button id="restartBtn">REDEPLOY</button></div></div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
-// Spring-damper
-var acceleration = -stiffness * recoilAngle
-                 - damping * recoilAngularVelocity;
-recoilAngularVelocity += acceleration * deltaTime;
-recoilAngle += recoilAngularVelocity * deltaTime;</pre><h3>6.3 Proiectil</h3><pre>Vector3 relativeVelocity = velocity - wind;
-Vector3 drag = -0.5f * airDensity * dragCoefficient
-             * area * relativeVelocity.magnitude
-             * relativeVelocity;
-velocity += (Physics.gravity + drag / mass) * deltaTime;
-SphereCast(previousPosition, radius, displacement.normalized,
-           out hit, displacement.magnitude, collisionMask);</pre><h3>6.4 AI</h3><pre>if (health01 &lt;= 0f) ChangeState(AiState.Dead);
-else if (health01 &lt;= 0.25f) ChangeState(AiState.Retreating);
-else if (perception.HasVisualContact())
-    ChangeState(ShouldFlank()
-        ? AiState.Flanking
-        : AiState.Combat);</pre></section>
-<section class="chapter" id="c7"><h2>Capitolul 7 — Arhitectura de producție</h2><p>Straturi: Presentation, Gameplay, Simulation și Authority. Clientul poate prezice camera, animațiile și mișcarea locală; serverul autoritativ validează poziția, damage-ul, proiectilele, inventarul, loot-ul și extracția.</p><table><tr><th>Simulare</th><th>Frecvență</th></tr><tr><td>Server</td><td>20 Hz</td></tr><tr><td>Fizică</td><td>50 Hz</td></tr><tr><td>Proiectile</td><td>60–120 Hz</td></tr><tr><td>Autosave</td><td>10 s; imediat la evenimente critice</td></tr></table></section>
-<section class="chapter" id="c8"><h2>Capitolul 8 — Inventar și full-loot</h2><h3>8.1 Placement</h3><div class="formula">0≤x; 0≤y; x+w≤W; y+h≤H
-M_total=Σq_i·m_i
-V_total=Σw_i·h_i·q_i</div><h3>8.2 Tranzacția atomică de moarte</h3><ol><li>Serverul confirmă moartea.</li><li>Blochează inventarul.</li><li>Generează DeathTransactionId.</li><li>Salvează loot container-ul.</li><li>Golește inventarul.</li><li>Respawnează jucătorul.</li></ol><div class="callout">Claim-ul loot-ului folosește lock tranzacțional; dacă toate obiectele nu încap, transferul este anulat.</div></section>
-<section class="chapter" id="c9"><h2>Capitolul 9 — Electricitate și raiduri</h2><div class="formula">P_net=P_generated−P_consumed
-E_next=clamp(E+P_net·Δt,0,E_max)
-T_raid=0,25L_base+0,20V_loot+0,20D_player+0,15E_noise+0,20R_history
-P_raid=1−e^(−k·T_raid·Δt)</div><p>Raidul trece prin Reconnaissance, Approach, Breach, Loot și Retreat. Punctul de breșă este ales după integritatea structurală, timpul de distrugere, turete și capcane.</p></section>
-<section class="chapter" id="c10"><h2>Capitolul 10 — Testare și criterii de acceptanță</h2><h3>10.1 Testare</h3><ul><li>64 jucători, 48 AI, 512 proiectile și 500 piese de bază în testul de stres.</li><li>Server tick mediu sub 50 ms.</li><li>Zero duplicări de obiecte în testele de tranzacție.</li><li>Zero tunneling pentru proiectilele validate.</li><li>AI stuck rate sub 1%.</li></ul><h3>10.2 Vertical slice</h3><p>Vertical slice-ul trebuie să permită deployment, loot, combat, damage segmentat, AI vizual și audio, extracție, full-loot, crafting, construcție și apărarea bazei.</p><div class="callout"><b>Ordine recomandată:</b> locomotie → damage → arme → inventar → loot → AI → extracție → bază → electricitate → raiduri → multiplayer autoritativ → optimizare.</div></section>
-<footer>Operation: Extinction — GDD & Specificație Tehnică de Producție<br>Document HTML pregătit pentru descărcare.</footer>
-</main>
+const canvas=document.querySelector('#game');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x08111a);scene.fog=new THREE.Fog(0x08111a,35,155);
+const camera=new THREE.PerspectiveCamera(78,innerWidth/innerHeight,.05,220);camera.rotation.order='YXZ';
+const clock=new THREE.Clock();const raycaster=new THREE.Raycaster();
+const keys=new Set();let running=false,locked=false,lastShot=0,reloading=false,mouseX=0,mouseY=0,velocity=new THREE.Vector3();
+let yaw=0,pitch=0,ammo=30,reserve=120,components=0,loot=0,extractActive=false,extractTimer=0,messageTimer=0;
+const player={pos:new THREE.Vector3(0,1.8,30),health:100,stamina:100,water:100,food:100,radiation:0,grounded:true,crouch:false};
+const enemies=[],items=[],obstacles=[],bullets=[];const worldSize=115;
+const mats={ground:new THREE.MeshStandardMaterial({color:0x25352f,roughness:1}),wall:new THREE.MeshStandardMaterial({color:0x394653,roughness:.9}),crate:new THREE.MeshStandardMaterial({color:0x76513a}),metal:new THREE.MeshStandardMaterial({color:0x657581,metalness:.55,roughness:.45}),enemy:new THREE.MeshStandardMaterial({color:0xa83939}),enemyHead:new THREE.MeshStandardMaterial({color:0xe17854}),loot:new THREE.MeshStandardMaterial({color:0xffc04c,emissive:0x6b3600}),extract:new THREE.MeshStandardMaterial({color:0x2cff8b,emissive:0x08743b,transparent:true,opacity:.78})};
+const hud={stats:document.querySelector('#stats'),objective:document.querySelector('#objective'),ammo:document.querySelector('#ammo'),message:document.querySelector('#message'),start:document.querySelector('#start'),death:document.querySelector('#death')};
+function mat(color,emissive=0){return new THREE.MeshStandardMaterial({color,emissive,roughness:.86})}
+function cube(x,y,z,sx,sy,sz,material,solid=true){const m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),material);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;scene.add(m);if(solid)obstacles.push(m);return m}
+function makeWorld(){
+ scene.add(new THREE.HemisphereLight(0x9ed7ff,0x182018,1.25));const sun=new THREE.DirectionalLight(0xffe0b0,2.1);sun.position.set(-35,65,25);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);
+ cube(0,-.35,0,worldSize,.5,worldSize,mats.ground,false);
+ cube(-worldSize/2,4,0,1,8,worldSize,mats.wall);cube(worldSize/2,4,0,1,8,worldSize,mats.wall);cube(0,4,-worldSize/2,worldSize,8,1,mats.wall);cube(0,4,worldSize/2,worldSize,8,1,mats.wall);
+ for(let i=0;i<42;i++){let x=(Math.random()-.5)*95,z=(Math.random()-.5)*90;if(Math.hypot(x,z-30)<12||Math.hypot(x,z+37)<12)continue;let w=2+Math.random()*5,h=1.4+Math.random()*3,d=2+Math.random()*5;cube(x,h/2,z,w,h,d,Math.random()<.55?mats.crate:mats.metal)}
+ const ex=cube(0,.05,-43,10,.12,10,mats.extract,false);ex.userData.extract=true;
+ const light=new THREE.PointLight(0x33ff99,4,18);light.position.set(0,2,-43);scene.add(light);
+ for(let i=0;i<8;i++)spawnEnemy();for(let i=0;i<7;i++)spawnLoot();
+}
+function spawnEnemy(){let a=Math.random()*Math.PI*2,r=25+Math.random()*48,x=Math.cos(a)*r,z=Math.sin(a)*r;const body=new THREE.Mesh(new THREE.CapsuleGeometry(.48,1.05,5,10),mats.enemy);body.position.set(x,1.1,z);body.castShadow=true;scene.add(body);const head=new THREE.Mesh(new THREE.SphereGeometry(.34,12,8),mats.enemyHead);head.position.y=.82;body.add(head);body.userData={type:'enemy',health:100,speed:1.25+Math.random()*.7,cooldown:Math.random(),head};enemies.push(body)}
+function spawnLoot(){let a=Math.random()*Math.PI*2,r=10+Math.random()*70,x=Math.cos(a)*r,z=Math.sin(a)*r;const item=new THREE.Mesh(new THREE.BoxGeometry(.42,.42,.42),mats.loot);item.position.set(x,.38,z);item.rotation.y=Math.random();item.userData={type:'loot',component:Math.random()<.42};scene.add(item);items.push(item)}
+function reset(){for(const e of enemies)scene.remove(e);for(const i of items)scene.remove(i);enemies.length=0;items.length=0;components=0;loot=0;ammo=30;reserve=120;extractActive=false;extractTimer=0;player.pos.set(0,1.8,30);player.health=100;player.stamina=100;player.water=100;player.food=100;velocity.set(0,0,0);yaw=0;pitch=0;for(let i=0;i<8;i++)spawnEnemy();for(let i=0;i<7;i++)spawnLoot();hud.death.classList.add('hidden');running=true;show('Deploy realizat. Găsește componentele și rămâi în viață.',3)}
+function show(text,seconds=2){hud.message.textContent=text;hud.message.style.opacity=1;messageTimer=seconds}
+function inputDir(){let x=(keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0),z=(keys.has('KeyS')?1:0)-(keys.has('KeyW')?1:0);const v=new THREE.Vector3(x,0,z);return v.lengthSq()?v.normalize():v}
+function blocked(pos){const box=new THREE.Box3().setFromCenterAndSize(pos,new THREE.Vector3(.55,1.8,.55));for(const o of obstacles){if(new THREE.Box3().setFromObject(o).intersectsBox(box))return true}return false}
+function updatePlayer(dt){let dir=inputDir(),forward=new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw)),right=new THREE.Vector3(forward.z,0,-forward.x);let wish=right.multiplyScalar(dir.x).add(forward.multiplyScalar(dir.z));if(wish.lengthSq())wish.normalize();let sprint=keys.has('ShiftLeft')&&dir.z<0&&player.stamina>0&&!player.crouch;let speed=player.crouch?2.0:sprint?7.2:4.1;if(sprint){player.stamina=Math.max(0,player.stamina-19*dt)}else player.stamina=Math.min(100,player.stamina+(dir.lengthSq()?8:18)*dt);if(keys.has('ControlLeft'))player.crouch=true;else if(!blocked(player.pos.clone().add(new THREE.Vector3(0,.55,0))))player.crouch=false;const target=wish.multiplyScalar(speed);velocity.x=THREE.MathUtils.damp(velocity.x,target.x,12,dt);velocity.z=THREE.MathUtils.damp(velocity.z,target.z,12,dt);if(player.grounded&&keys.has('Space')){velocity.y=6.2;player.grounded=false;keys.delete('Space')}velocity.y-=18*dt;let next=player.pos.clone().addScaledVector(velocity,dt);if(next.y<=1.05){next.y=player.crouch?.95:1.8;velocity.y=0;player.grounded=true}if(!blocked(new THREE.Vector3(next.x,player.pos.y,next.z)))player.pos.x=next.x,player.pos.z=next.z;player.pos.y=next.y;camera.position.copy(player.pos);camera.position.y=player.crouch?1.2:1.8;camera.rotation.set(pitch,yaw,0)}
+function shoot(){if(!running||reloading||performance.now()-lastShot<115)return;if(ammo<=0){reload();return}lastShot=performance.now();ammo--;const spread=(player.stamina<25?.018:0.006)+(player.crouch?.0:.008);const dir=new THREE.Vector3(0,0,-1).applyEuler(camera.rotation);dir.x+= (Math.random()-.5)*spread;dir.y+=(Math.random()-.5)*spread;dir.normalize();raycaster.set(camera.position,dir);const targets=[];for(const e of enemies){targets.push(e,e.userData.head)}raycaster.intersectObjects(targets,false).some(hit=>{let e=hit.object.userData.type==='enemy'?hit.object:hit.object.parent;let head=hit.object===e.userData.head;e.userData.health-=head?70:34;show(head?'HEADSHOT':'HIT',.35);if(e.userData.health<=0){scene.remove(e);enemies.splice(enemies.indexOf(e),1);loot+=2;show('ȚINTĂ ELIMINATĂ · +2 loot',1)}return true});const flash=new THREE.Mesh(new THREE.SphereGeometry(.055,6,6),mat(0xffe1a0,0xff7b00));flash.position.copy(camera.position).addScaledVector(dir,.8);scene.add(flash);setTimeout(()=>scene.remove(flash),45);hud.ammo.textContent=ammo}
+function reload(){if(reloading||ammo===30||reserve<=0)return;reloading=true;show('REÎNCĂRCARE...',1.2);setTimeout(()=>{let n=Math.min(30-ammo,reserve);ammo+=n;reserve-=n;reloading=false;hud.ammo.textContent=ammo},1300)}
+function updateEnemies(dt){for(const e of [...enemies]){const d=player.pos.clone().sub(e.position);const dist=d.length();e.userData.cooldown-=dt;if(dist<42){d.y=0;if(d.lengthSq()>3.4)e.position.addScaledVector(d.normalize(),e.userData.speed*dt);e.lookAt(player.pos.x,e.position.y,player.pos.z);if(dist<2.2&&e.userData.cooldown<=0){player.health-=8;player.stamina=Math.max(0,player.stamina-8);e.userData.cooldown=1.15;damageFlash()}}}}
+function damageFlash(){document.body.classList.add('damage');setTimeout(()=>document.body.classList.remove('damage'),180);if(player.health<=0){running=false;document.exitPointerLock?.();hud.death.classList.remove('hidden')}}
+function collect(){for(let i=items.length-1;i>=0;i--){const item=items[i];if(item.position.distanceTo(player.pos)<2.2){if(item.userData.component){components++;show('COMPONENTĂ RECUPERATĂ',1.3)}else{loot++;show('RESURSĂ COLECTATĂ',.8)}scene.remove(item);items.splice(i,1)}}if(!extractActive&&components>=3&&player.pos.distanceTo(new THREE.Vector3(0,1.8,-43))<9){extractActive=true;extractTimer=12;show('EXTRACȚIE ACTIVATĂ · rămâi în zona verde',2)}}
+function updateSurvival(dt){player.water=Math.max(0,player.water-.65*dt);player.food=Math.max(0,player.food-.22*dt);if(player.water<15||player.food<10)player.health=Math.max(0,player.health-1.6*dt);if(extractActive&&player.pos.distanceTo(new THREE.Vector3(0,1.8,-43))<7){extractTimer-=dt;if(extractTimer<=0){running=false;show('EXTRACȚIE REUȘITĂ · loot securizat',4);document.exitPointerLock?.();hud.start.classList.remove('hidden');hud.start.querySelector('h1').textContent='RAID FINALIZAT';hud.start.querySelector('h2').textContent='EXTRACȚIE REUȘITĂ';hud.start.querySelector('p').innerHTML='Ai securizat '+loot+' unități de loot și '+components+' componente. Apasă Deploy pentru un nou raid.'}}else if(extractActive)extractTimer=12}
+function updateHud(){const bar=(name,val,cls)=>name+`<div class="bar"><div class="fill ${cls}" style="width:${Math.max(0,val)}%"></div></div>`;hud.stats.innerHTML=bar('HP '+Math.ceil(player.health),player.health,'health')+bar('STAMINA '+Math.ceil(player.stamina),player.stamina,'stamina')+bar('APĂ '+Math.ceil(player.water),player.water,'water')+bar('FOAME '+Math.ceil(player.food),player.food,'food');hud.objective.innerHTML=extractActive?`<span class="extract">EXTRACȚIE: ${Math.ceil(extractTimer)}s</span><br>Rămâi în zona verde.`:`COMPONENTE: ${components}/3<br>LOOT: ${loot} · Elimină amenințările și explorează sectorul.`;if(messageTimer>0){messageTimer-=clock.getDelta();if(messageTimer<=0)hud.message.style.opacity=0}}
+function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);if(running){updatePlayer(dt);updateEnemies(dt);updateSurvival(dt);collect();updateHud()}renderer.render(scene,camera)}
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});addEventListener('keydown',e=>{keys.add(e.code);if(e.code==='KeyR')reload();if(e.code==='KeyE')collect();if(e.code==='Space')e.preventDefault()});addEventListener('keyup',e=>keys.delete(e.code));canvas.addEventListener('click',()=>{if(running)canvas.requestPointerLock()});document.addEventListener('pointerlockchange',()=>locked=document.pointerLockElement===canvas);document.addEventListener('mousemove',e=>{if(!locked)return;yaw-=e.movementX*.0022;pitch-=e.movementY*.0022;pitch=THREE.MathUtils.clamp(pitch,-1.45,1.45)});document.addEventListener('mousedown',e=>{if(e.button===0&&locked)shoot()});document.querySelector('#startBtn').onclick=()=>{hud.start.classList.add('hidden');reset();canvas.requestPointerLock()};document.querySelector('#restartBtn').onclick=()=>{hud.death.classList.add('hidden');reset();canvas.requestPointerLock()};
+makeWorld();camera.position.copy(player.pos);animate();
+</script>
 </body>
 </html>
